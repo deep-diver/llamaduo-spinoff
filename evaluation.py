@@ -43,7 +43,7 @@ async def evaluate(args):
         # eval_prompts, similarity_scores, precision_scores) will be recorded
         push_to_hf_hub(
             args.eval_ds_id, args.eval_ds_split, 
-            eval_results["ds_with_scores"], False
+            eval_results["ds_with_scores"], args.eval_ds_append
         )
     else:
         eval_results["ds_with_scores"].save_to_disk(args.eval_ds_id)
@@ -92,6 +92,7 @@ if __name__ == "__main__":
                         help="Hugging Face Dataset repository ID")
     parser.add_argument("--eval-ds-split", type=str, default="eval",
                         help="Split of the lm evak dataset to use for saving.") 
+    parser.add_argument("--eval-ds-append", action="store_true", default=True)
 
     args = parser.parse_args()
     args = update_args(parser, args)
