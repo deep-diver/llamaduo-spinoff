@@ -48,7 +48,10 @@ def push_to_hf_hub(dataset_id, split, ds, append=True):
       
     if exist and append:
         existing_ds = load_dataset(dataset_id)
-        concat_ds = concatenate_datasets([existing_ds[split], ds[split]])
-        ds = DatasetDict({split: concat_ds})
+        if split in existing_ds:
+            existing_ds[split] = concatenate_datasets([existing_ds[split], ds[split]])
+        else:
+            existing_ds[split] = ds[split]
+        ds = existing_ds
 
     ds.push_to_hub(dataset_id)
