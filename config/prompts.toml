@@ -28,19 +28,34 @@ Provide the assessment in the following JSON format:
 """
 
 [synth_data_gen]
+# prompt = """
+# Generate a series of (instruction, response) pairs that are similar in context and structure to the example provided below. Each pair should consist of a concise instruction followed by an appropriate, detailed response. The instruction should pose a clear task or question, while the response should provide a comprehensive answer or solution that could be understood by someone with a basic understanding of the subject.
+
+# Example pair:
+
+# Instruction: $instruction
+# Response: $response
+
+# Your task is to generate more pairs that maintain this level of clarity and detail. The topic is $topic. Ensure that the responses are informative and accurate, suitable for an educational context.
+
+# Store the generated pairs in JSON format, with each pair as an object within an array. Each object should have two key-value pairs: "instruction" and "response". For instance:
+
+# {"contents": [{"instruction": "text", "response": "text"}, {"instruction": "text", "response": "text"}, ...]}
+
+# Remember to maintain consistency in the format and ensure the generated pairs are diverse and cover a broad range of subjects. You must return the response in the asked format and you must not add any additional text in your response.
+# """
 prompt = """
-Generate a series of (instruction, response) pairs that are similar in context and structure to the example provided below. Each pair should consist of a concise instruction followed by an appropriate, detailed response. The instruction should pose a clear task or question, while the response should provide a comprehensive answer or solution that could be understood by someone with a basic understanding of the subject.
+Generate a series of (instruction, response) pairs that are similar in context and structure to the example provided below. Each pair should consist of a concise instruction followed by an appropriate, detailed response. The instruction should pose a clear task or question, while the response should provide a comprehensive answer or solution that could be understood by someone with a basic understanding of the subject. 
 
-Example pair:
+Example pair: 
+Instruction: Sum up what the following article says about why Americans are experiencing a “friendship recession.” So it is alarming that Americans are experiencing a “friendship recession.” The startling decline of friendship Modern living is tough on friendship.Unlike our ancestors who knew everyone in their tribe, most people now live in cities where the default is anonymity. As children and young adults, school may provide a social community. Indeed, the number of friends people have peaks around age 25, but then substantially drops around age 30, when work and the nuclear family take over. Americans, especially those who are highly educated and high-earning, work longer hours and are more likely to move for work than ever before. Parents also spend twice as much time with their children than previous generations. This saps the ability to maintain close friendships. The last decade has seen a startling further fall in the number and quality of friendships. 
+Response: There are many reasons why Americans are seeing a decline in the number and quality of friendships over the last decade. A couple of these reasons may be attributed to many Americans working longer hours and parents spending more time with their children than in prior generations. 
 
-Instruction: $instruction
-Response: $response
+Your task is to generate more pairs that maintain this level of clarity and detail. The topic is $topic. Write a long text of instruction by yourself, then summarize the given instruction in a response. Ensure that the responses are informative and accurate, suitable for an educational context. 
 
-Your task is to generate more pairs that maintain this level of clarity and detail. The topic is $topic. Ensure that the responses are informative and accurate, suitable for an educational context.
+Store the generated pairs in JSON format, with each pair as an object within an array. Each object should have two key-value pairs: "instruction" and "response". For instance: 
 
-Store the generated pairs in JSON format, with each pair as an object within an array. Each object should have two key-value pairs: "instruction" and "response". For instance:
-
-{"contents": [{"instruction": "text", "response": "text"}, {"instruction": "text", "response": "text"}, ...]}
+{"contents": [{"instruction": "text", "response": "text"}, {"instruction": "text", "response": "text"}, ...]} 
 
 Remember to maintain consistency in the format and ensure the generated pairs are diverse and cover a broad range of subjects. You must return the response in the asked format and you must not add any additional text in your response.
 """
