@@ -170,7 +170,7 @@ def collage_as_dataset(
             seed_prompts.append(partial_seed_prompts[0])
     
     generators = [service_model_name] * len(all_formatted_responses)
-    prompt_ids = ["gemini-generated"] * len(all_formatted_responses)
+    prompt_ids = [service_model_name] * len(all_formatted_responses)
     categories = [topic] * len(all_formatted_responses)
     dataset_train = Dataset.from_dict(
         {
