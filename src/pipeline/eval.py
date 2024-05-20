@@ -6,7 +6,6 @@ from datetime import datetime
 from datasets import load_dataset, DatasetDict
 from collections import deque
 
-from ..gen.gemini import get_model as get_service_model
 from ..gen.utils import call_service_llm, _calculate_job_distribution
 
 JSON_KEYS_TO_CHECK = ["similarity_assessment.score", "precision_assessment.score"]
