@@ -3,7 +3,7 @@ type: task
 python: "3.11"
 
 env:
-  - HUGGING_FACE_HUB_TOKEN=<YOUR-HUGGING-FACE-HUB-AT>
+  - HUGGING_FACE_HUB_TOKEN
 
 commands:
   - conda install cuda
