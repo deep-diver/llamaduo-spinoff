@@ -35,7 +35,7 @@ def get_model(model_id, model_revision, model_args, data_args, sft_args):
 
     return tokenizer, model_id, model
 
-def gen_model_outputs(model, tokenizer, batch_data, temperature=0.4, max_new_tokens=1024, delimiter="assistant\n"):
+def gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs, delimiter="assistant\n"):
     """
     gen_model_output generates and return response(output) from a given model.
 
@@ -53,9 +53,7 @@ def gen_model_outputs(model, tokenizer, batch_data, temperature=0.4, max_new_tok
     
     generated_ids = model.generate(
         **input_ids,
-        do_sample=True,
-        temperature=temperature,
-        max_new_tokens=max_new_tokens,
+        **ft_model_gen_configs,
     )
     
     outputs = []
