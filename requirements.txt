@@ -1,8 +1,9 @@
+# alignment-handbook
 git+https://github.com/huggingface/alignment-handbook.git@main
-transformers
-peft
-accelerate
-git+https://github.com/TimDettmers/bitsandbytes.git@main
+# transformers
+# peft
+# accelerate
+# git+https://github.com/TimDettmers/bitsandbytes.git@main
 datasets
 google-generativeai
 toml
@@ -10,4 +11,4 @@ pyyaml
 huggingface_hub
 tqdm
 # openai, gemini, gemini-vertex, anthropic, anthropic-vertex, anthropic-bedrock
-genai-apis[gemini]
+genai-apis[openai]
