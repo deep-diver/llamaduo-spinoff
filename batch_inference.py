@@ -1,4 +1,5 @@
 import os
+import yaml
 import argparse
 
 from utils import is_push_to_hf_hub_enabled, update_args
@@ -12,6 +13,9 @@ def batch_inference(args):
     Additionally it goes through arguments' validation, and 
     it pushes generated outputs to the specified Hugging Face Dataset repo.
     """
+    with open(args.ft_model_gen_config_path, 'r') as file:
+        ft_model_gen_configs = yaml.safe_load(file)    
+    
     hf_hub = is_push_to_hf_hub_enabled(
         args.push_lm_responses_to_hf_hub,
         args.lm_response_ds_id, args.lm_response_ds_split
@@ -21,7 +25,7 @@ def batch_inference(args):
         args.ft_model_id, args.ft_model_revision,
         args.test_ds_id, args.test_ds_split, 
         args.batch_infer_data_preprocess_bs, args.inference_bs, args.repeat,
-        args.lm_response_ds_split, args.ft_model_config_path, 
+        args.lm_response_ds_split, args.ft_model_config_path, ft_model_gen_configs,
     )
 
     if hf_hub is True:
@@ -54,6 +58,7 @@ if __name__ == "__main__":
     parser.add_argument("--ft-model-config-path", type=str, 
                         default=os.path.abspath("config/sample_config.yaml"),
                         help="Path to the fine-tuned model configuration file.")
+    parser.add_argument("--ft-model-gen-config-path", type=str, default="config/ft_gen_configs.yaml")
     parser.add_argument("--test-ds-id", type=str, default=None,
                         help="ID of the test dataset.")
     parser.add_argument("--test-ds-split", type=str, default="test_sft",

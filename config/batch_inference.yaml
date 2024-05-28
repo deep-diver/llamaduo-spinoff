@@ -1,15 +1,16 @@
-ft_model_id: chansung/coding_llamaduo_60k_v0.2
+ft_model_id: llama-duo/gemma7b-summarize-gpt4o-80k
 ft_model_revision: main
 ft_model_config_path: config/sample_config.yaml
+ft-model-gen-config-path: config/ft_gen_configs.yaml
 
-test_ds_id: sayakpaul/no_robots_only_coding
-test_ds_split: test_sft
+test_ds_id: llama-duo/coverage_dataset
+test_ds_split: test_summarize
 
 batch_infer_data_preprocess_bs: 16
 inference_bs: 8
 repeat: 4
 
 push_lm_responses_to_hf_hub: true
-lm_response_ds_id: chansung/llamaduo-responses
-lm_response_ds_split: batch_infer
-lm-response-append: false
+lm_response_ds_id: llama-duo/gemma7b-summarize-responses
+lm_response_ds_split: gemma7b_summarize_gpt4o_80k
+lm-response-append: true
