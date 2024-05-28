@@ -50,7 +50,7 @@ fi
 
 # Loop to run the Python script
 for (( i=1; i<=$iterations; i++ )); do
-    result=$(python "$check_dataset_size" --threshold "$threshold")
+    result=$(python check_ds_size.py --threshold $threshold)
 
     if [ "$result" == "true" ]; then
         echo "Dataset size exceeded. Taking action..."
@@ -60,6 +60,7 @@ for (( i=1; i<=$iterations; i++ )); do
         python "$python_script"
         echo "Iteration $i completed."
         echo ""
+    fi
 done
 
 echo "All iterations finished!"
