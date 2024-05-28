@@ -1,14 +1,15 @@
 #!/bin/bash
 
 # Check for sufficient arguments
-if [ $# -lt 2 ]; then
-    echo "Usage: $0 <path/to/python_script.py> <number_of_iterations>"
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 <path/to/python_script.py> <path/to/yaml_file.yaml> <number_of_iterations>"
     exit 1
 fi
 
-# Get iterations and script path
+# Get iterations, script path, and YAML path
 python_script=$1
-iterations=$2
+yaml_file=$2
+iterations=$3
 
 # Validate iteration count
 if ! [[ $iterations =~ ^[1-9][0-9]*$ ]]; then
@@ -16,20 +17,18 @@ if ! [[ $iterations =~ ^[1-9][0-9]*$ ]]; then
     exit 1
 fi
 
-# Check if Python script exists
+# Check if Python script and YAML file exist
 if [ ! -f "$python_script" ]; then
     echo "Python script not found: $python_script"
     exit 1
 fi
+if [ ! -f "$yaml_file" ]; then
+    echo "YAML file not found: $yaml_file"
+    exit 1
+fi
 
-# Check if it's evaluation.py and modify seed if so
+# Check if it's data_gen.py and modify seed if so
 if [[ $python_script == *"data_gen.py"* ]]; then
-    yaml_file="config/synth_data_gen.yaml"  # Update with your actual YAML file path
-    if [ ! -f "$yaml_file" ]; then
-        echo "YAML file not found: $yaml_file"
-        exit 1
-    fi
-
     # Generate a random seed between 0 and 99999
     new_seed=$((RANDOM % 100000))
 
@@ -39,7 +38,7 @@ if [[ $python_script == *"data_gen.py"* ]]; then
     else  # Linux (and other Unix-like systems)
         sed -i "s/seed: .*/seed: $new_seed/" "$yaml_file"
     fi
-    echo "Seed in $yaml_file changed to $new_seed for evaluation.py"
+    echo "Seed in $yaml_file changed to $new_seed for data_gen.py"
 fi
 
 # Loop to run the Python script
