@@ -41,13 +41,17 @@ def _get_lm_response_dataset(dataset_id, split, eval_prompt_tmpl, batch_size):
         __batch_process, batched=True, batch_size=batch_size
     )
 
-async def _gen_eval_on_records(eval_prompts, client, eval_model, gen_configs, eval_workers, rate_limit_per_minute):
+async def _gen_eval_on_records(eval_prompts, client, eval_model, gen_configs, eval_workers, rate_limit_on, rate_limit_per_minute):
     """
     _gen_eval_on_records simultaneously generates evaluations on the eval_prompts,
     respecting rate limits and scheduling constraints.
     """
     assessments = []
-    jobs_at_once, sleep_interval = _calculate_job_distribution(rate_limit_per_minute, num_workers=eval_workers)
+    jobs_at_once = eval_workers
+    sleep_interval = 0
+    
+    if rate_limit_on:
+        jobs_at_once, sleep_interval = _calculate_job_distribution(rate_limit_per_minute, num_workers=eval_workers)
     prompt_queue = deque(eval_prompts)  # Use a deque to efficiently manage the queue of prompts
 
     while prompt_queue:
@@ -77,7 +81,7 @@ async def eval_on_records(
     lm_response_dataset_id, lm_response_dataset_split, eval_prompt_tmpl_path, 
     service_llm_client, service_model_name, service_llm_gen_configs, eval_workers, eval_repeat,
     avg_similarity_threshold, avg_precision_threshold,
-    batch_size, eval_dataset_split, rate_limit_per_minute
+    batch_size, eval_dataset_split, rate_limit_on, rate_limit_per_minute
 ):
     """
     eval_on_records evaluates the generated output on a given instruction dataset by local language model 
@@ -99,7 +103,7 @@ async def eval_on_records(
 
         partial_assessments = []
         for _ in tqdm(range(eval_repeat), desc="repeat"):        
-            assessments = await _gen_eval_on_records(batch_data["eval_prompts"], service_llm_client, service_model_name, service_llm_gen_configs, eval_workers, rate_limit_per_minute)
+            assessments = await _gen_eval_on_records(batch_data["eval_prompts"], service_llm_client, service_model_name, service_llm_gen_configs, eval_workers, rate_limit_on, rate_limit_per_minute)
             partial_assessments.append(assessments)
 
         for partial_idx, each_assessments in enumerate(_iterate_inner_lists(partial_assessments)):

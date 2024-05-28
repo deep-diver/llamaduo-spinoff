@@ -35,7 +35,7 @@ async def evaluate(args):
         service_llm_client, args.service_model_name, service_llm_gen_configs,
         args.eval_workers, args.eval_repeat,
         args.avg_similarity_threshold, args.avg_precision_threshold,
-        args.eval_data_preprocess_bs, args.eval_ds_split, args.rate_limit_per_minute
+        args.eval_data_preprocess_bs, args.eval_ds_split, args.rate_limit_on, args.rate_limit_per_minute
     )
 
     if hf_hub is True:
@@ -93,6 +93,8 @@ if __name__ == "__main__":
     parser.add_argument("--eval-ds-split", type=str, default="eval",
                         help="Split of the lm evak dataset to use for saving.") 
     parser.add_argument("--eval-ds-append", action="store_true", default=True)
+
+    parser.add_argument("--rate-limit-on", action="store_true", default=True)
 
     args = parser.parse_args()
     args = update_args(parser, args)

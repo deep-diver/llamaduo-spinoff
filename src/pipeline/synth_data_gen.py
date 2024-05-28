@@ -101,12 +101,16 @@ def _craft_prompts(samples, topic, prompt_tmpl_path):
     ]
     return prompts
 
-async def _gen_synth_data(prompts, client, model, gen_configs, eval_workers, rate_limit_per_minute):
+async def _gen_synth_data(prompts, client, model, gen_configs, gen_workers, rate_limit_on, rate_limit_per_minute):
     """
     _gen_synth_data concurrently generates synthetic data based on the given prompts
     """
     generated_data = []
-    jobs_at_once, sleep_interval = _calculate_job_distribution(rate_limit_per_minute, num_workers=eval_workers)
+    jobs_at_once = gen_workers
+    sleep_interval = 0
+
+    if rate_limit_on:
+        jobs_at_once, sleep_interval = _calculate_job_distribution(rate_limit_per_minute, num_workers=gen_workers)
     prompt_queue = deque(prompts)
 
     with tqdm(total=len(prompts), desc="batches") as pbar:
@@ -135,7 +139,7 @@ async def synth_data_generation(
     seed, num_sample,
     topic, prompt_tmpl_path,
     service_llm_client, service_model_name, service_llm_gen_configs,
-    gen_workers, rate_limit_per_minute
+    gen_workers, rate_limit_on, rate_limit_per_minute
 ):
     """
     synth_data_generation does the following jobs in order
@@ -149,7 +153,7 @@ async def synth_data_generation(
     prompts = _craft_prompts(samples, topic, prompt_tmpl_path)
 
     print("Generating synthetic data")
-    generated_data = await _gen_synth_data(prompts, service_llm_client, service_model_name, service_llm_gen_configs, gen_workers, rate_limit_per_minute)
+    generated_data = await _gen_synth_data(prompts, service_llm_client, service_model_name, service_llm_gen_configs, gen_workers, rate_limit_on, rate_limit_per_minute)
 
     save_dir_path = tempfile.gettempdir()
     filenames = []

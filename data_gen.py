@@ -42,7 +42,7 @@ async def synth_data_gen(args):
         args.seed, args.num_samples,
         args.topic, args.prompt_tmpl_path,
         service_llm_client, args.service_model_name, service_llm_gen_configs,
-        args.gen_workers, args.rate_limit_per_minute
+        args.gen_workers, args.rate_limit_on, args.rate_limit_per_minute
     )
     dataset = collage_as_dataset(
         filenames, args.service_model_name, args.topic, args.synth_ds_split
@@ -105,6 +105,8 @@ if __name__ == "__main__":
                         help="Split of the synthetic dataset") 
     parser.add_argument("--synth-ds-append", action="store_true", default=True,
                         help="Wheter to overwrite or append on the existing Hugging Face Dataset repository")
+
+    parser.add_argument("--rate-limit-on", action="store_true", default=True)
 
     args = parser.parse_args()
     args = update_args(parser, args)
