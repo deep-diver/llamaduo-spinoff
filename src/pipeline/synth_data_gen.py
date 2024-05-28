@@ -1,3 +1,5 @@
+import string
+import random
 import tempfile
 import toml
 import json
@@ -14,6 +16,10 @@ from collections import deque
 from ..gen.utils import call_service_llm, _calculate_job_distribution
 
 JSON_KEYS_TO_CHECK = {"contents"}
+
+def generate_random_string(length=10):
+    letters = string.ascii_letters  # Generates a string containing all the uppercase and lowercase letters
+    return ''.join(random.choice(letters) for _ in range(length))
 
 def _load_all_json_files(filenames):
     """
@@ -141,7 +147,7 @@ async def synth_data_generation(
     for i, (seed_prompt, data) in tqdm(enumerate(zip(prompts, generated_data)), total=len(generated_data), desc="to JSON file"):
         if data:
             data["seed_prompt"] = seed_prompt
-            filename = f"{save_dir_path}/generated_data_{i}.json"
+            filename = f"{save_dir_path}/generated_data_{generate_random_string()}.json"
             filenames.append(filename)
 
             with open(filename, "w") as f:
