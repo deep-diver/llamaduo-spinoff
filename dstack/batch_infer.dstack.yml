@@ -8,6 +8,7 @@ env:
 commands:
   - conda install cuda
   - pip install -r requirements.txt
+  - python -m pip install flash-attn --no-build-isolation
 
   - python batch_inference.py
 ports:
