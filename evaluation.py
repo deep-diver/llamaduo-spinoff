@@ -20,7 +20,7 @@ async def evaluate(args):
         "api_key": args.service_llm_api_key,
         "GCP_PROJECT_ID": args.gcp_project_id,
         "GCP_PROJECT_LOCATION": args.gcp_location,
-        "AWS_LOCATION": args.aws_location,
+        "AWS_REGION": args.aws_location,
     }
     service_llm_client = APIFactory.get_api_client(args.service_llm_provider, **service_llm_kwargs)
     with open(args.service_llm_gen_config_path, 'r') as file:
