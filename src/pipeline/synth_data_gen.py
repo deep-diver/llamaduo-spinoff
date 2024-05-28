@@ -28,7 +28,11 @@ def _load_all_json_files(filenames):
     all_json_dicts = []
     for filename in filenames:
         with open(filename) as f:
-            all_json_dicts.append(json.load(f))
+            try:
+                content = json.load(f)
+                all_json_dicts.append(content)
+            except:
+                pass
     return all_json_dicts
 
 def _format_response(responses: List[Dict[str, str]]):
@@ -40,14 +44,17 @@ def _format_response(responses: List[Dict[str, str]]):
     final_instruction_answer_pairs = []
 
     for response in responses["contents"]:
-        user_response_dict = {}
-        assistant_response_dict = {}
-        user_response_dict["content"] = response["instruction"]
-        user_response_dict["role"] = "user"
-        assistant_response_dict["content"] = response["response"]
-        assistant_response_dict["role"] = "assistant"
+        try:
+            user_response_dict = {}
+            assistant_response_dict = {}
+            user_response_dict["content"] = response["instruction"]
+            user_response_dict["role"] = "user"
+            assistant_response_dict["content"] = response["response"]
+            assistant_response_dict["role"] = "assistant"
 
-        final_instruction_answer_pairs.append([user_response_dict, assistant_response_dict])
+            final_instruction_answer_pairs.append([user_response_dict, assistant_response_dict])
+        except:
+            pass
 
     seed_prompts = [responses["seed_prompt"]] * len(final_instruction_answer_pairs)
 
@@ -62,9 +69,12 @@ def _sampling(dataset_id, split, num_sample, seed):
 
     ds = load_dataset(dataset_id, split=split, verification_mode="no_checks")
     total_original_samples = len(ds)
-    random_indices = np.random.randint(
-        0, total_original_samples, size=(num_sample)
-    )
+
+    while True:
+        random_indices = np.random.randint(0, total_original_samples, size=num_sample)
+        if len(set(random_indices)) == num_sample:  # Check for unique indices
+            break  # Exit the loop if all indices are unique
+
     return ds.select(random_indices)
 
 def _get_synth_data_gen_prompt_tmpl(prompt_tmpl_path):
@@ -148,10 +158,14 @@ async def synth_data_generation(
         if data:
             data["seed_prompt"] = seed_prompt
             filename = f"{save_dir_path}/generated_data_{generate_random_string()}.json"
-            filenames.append(filename)
 
             with open(filename, "w") as f:
-                json.dump(data, f)
+                try:
+                    json.dump(data, f)
+                    filenames.append(filename)
+                    print(f"{i}-th result is saved into {filename}.")
+                except:
+                    pass
 
     return filenames
 
