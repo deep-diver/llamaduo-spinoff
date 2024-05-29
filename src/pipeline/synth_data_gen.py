@@ -1,3 +1,4 @@
+import traceback
 import string
 import random
 import tempfile
@@ -49,7 +50,10 @@ def _format_response(responses: List[Dict[str, str]]):
             assistant_response_dict = {}
             user_response_dict["content"] = response["instruction"]
             user_response_dict["role"] = "user"
-            assistant_response_dict["content"] = response["response"]
+            if isinstance(response["response"], list):
+                assistant_response_dict["content"] = ' '.join(response["response"])
+            else:
+                assistant_response_dict["content"] = response["response"]
             assistant_response_dict["role"] = "assistant"
 
             final_instruction_answer_pairs.append([user_response_dict, assistant_response_dict])
@@ -70,11 +74,7 @@ def _sampling(dataset_id, split, num_sample, seed):
     ds = load_dataset(dataset_id, split=split, verification_mode="no_checks")
     total_original_samples = len(ds)
 
-    while True:
-        random_indices = np.random.randint(0, total_original_samples, size=num_sample)
-        if len(set(random_indices)) == num_sample:  # Check for unique indices
-            break  # Exit the loop if all indices are unique
-
+    random_indices = np.random.choice(range(0, total_original_samples), num_sample, replace=False) #np.random.randint(0, total_original_samples, size=num_sample, replace=False)
     return ds.select(random_indices)
 
 def _get_synth_data_gen_prompt_tmpl(prompt_tmpl_path):
@@ -195,6 +195,7 @@ def collage_as_dataset(
     generators = [service_model_name] * len(all_formatted_responses)
     prompt_ids = [service_model_name] * len(all_formatted_responses)
     categories = [topic] * len(all_formatted_responses)
+
     dataset_train = Dataset.from_dict(
         {
             "generator": generators,
@@ -204,6 +205,7 @@ def collage_as_dataset(
             "category": categories
         }
     )
+
     return DatasetDict(
         {split: dataset_train}
     )
