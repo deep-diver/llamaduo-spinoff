@@ -1,0 +1,21 @@
+service_llm_provider: gemini-vertex
+service_model_name: gemini-1.5-flash-001
+# service_llm_provider: openai
+# service_model_name: gpt-4o
+rate_limit_per_minute: 60
+prompt_tmpl_path: config/prompts.toml
+service_llm_gen_config_path: config/gemini_gen_configs.yaml
+
+reference_ds_id: llama-duo/coverage_dataset
+reference_ds_split: train_summarize
+num_samples: 300
+seed: 17804
+topic: Summarization
+
+gen_workers: 30
+rate_limit_on: false
+
+push_synth_ds_to_hf_hub: true
+synth_ds_id: chansung/new_summarize_synth_ds2
+synth_ds_split: gemini1_5flash
+synth_ds_append: true

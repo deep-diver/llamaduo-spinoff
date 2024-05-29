@@ -1,0 +1,19 @@
+service_llm_provider: openai
+service_model_name: gpt-4o
+rate_limit_per_minute: 60
+prompt_tmpl_path: config/prompts.toml
+service_llm_gen_config_path: config/gpt_gen_configs.yaml
+
+reference_ds_id: llama-duo/coverage_dataset
+reference_ds_split: train_summarize
+num_samples: 300
+seed: 9913
+topic: Summarization
+
+gen_workers: 30
+rate_limit_on: false
+
+push_synth_ds_to_hf_hub: true
+synth_ds_id: chansung/new_summarize_synth_ds
+synth_ds_split: gpt4o
+synth_ds_append: true
