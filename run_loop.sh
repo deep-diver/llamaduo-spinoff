@@ -50,14 +50,14 @@ fi
 
 # Loop to run the Python script
 for (( i=1; i<=$iterations; i++ )); do
-    result=$(python check_ds_size.py --threshold $threshold)
+    result=$(python check_ds_size.py --from-config $yaml_file --threshold $threshold)
 
     if [ "$result" == "true" ]; then
         echo "Dataset size exceeded. Taking action..."
         break
     else
         echo "Dataset size within limit. Running iteration $i of $python_script..."
-        python "$python_script"
+        python "$python_script" --from-config $yaml_file
         echo "Iteration $i completed."
         echo ""
     fi
