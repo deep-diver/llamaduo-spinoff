@@ -1,0 +1,6 @@
+dataset: chansung/synth_summarize_dataset
+split: train_sft_gpt4o
+column: messages
+minhash_threshold: 0.9
+score_threshold: 0.7
+push_to_hf_hub: true

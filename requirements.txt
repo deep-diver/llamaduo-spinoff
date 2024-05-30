@@ -12,3 +12,5 @@ huggingface_hub
 tqdm
 # openai, gemini, gemini-vertex, anthropic, anthropic-vertex, anthropic-bedrock
 genai-apis[openai]
+datasketch
+rouge-score
