@@ -1,6 +1,13 @@
 dataset: chansung/synth_summarize_dataset
-split: train_sft_gpt4o
+split: train_sft_gemini1_5flash
 column: messages
+
 minhash_threshold: 0.9
 score_threshold: 0.7
+
+use_cached_minhash: false
+cached_minhash_path: /tmp/minhashes_gemini.pkl
+use_cached_dedup: false
+cached_dedup_path: /tmp/duplicates_gemini.pkl
+
 push_to_hf_hub: true
