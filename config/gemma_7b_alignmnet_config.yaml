@@ -22,10 +22,10 @@ lora_target_modules:
 
 # Data training arguments
 dataset_mixer:
-#  llama-duo/synth_summarize_dataset: 1.0
+  llama-duo/synth_summarize_dataset_dedup: 0.416
 dataset_splits:
-# - train_sft_gemini1.5flash_8k
-# - test
+ - train_sft_gpt4o
+ - test
 preprocessing_num_workers: 12
 
 # SFT trainer config
@@ -39,7 +39,7 @@ gradient_accumulation_steps: 2
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
-# hub_model_id: llama-duo/gemma7b-summarize-gemini1.5flash-80k
+hub_model_id: llama-duo/gemma7b-summarize-gpt4o-128k
 hub_strategy: every_save
 learning_rate: 2.0e-04
 log_level: info
@@ -48,11 +48,11 @@ logging_strategy: steps
 lr_scheduler_type: cosine
 max_seq_length: 2048
 max_steps: -1
-# num_train_epochs: 10
-# output_dir: gemma7b-summarize-gemini1.5flash-80k
+num_train_epochs: 15
+output_dir: gemma7b-summarize-gpt4o-128k
 overwrite_output_dir: true
-# per_device_eval_batch_size: 2
-# per_device_train_batch_size: 4
+per_device_eval_batch_size: 2
+per_device_train_batch_size: 4
 push_to_hub: true
 report_to:
 - tensorboard

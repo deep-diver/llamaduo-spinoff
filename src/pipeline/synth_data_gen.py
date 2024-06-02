@@ -46,17 +46,18 @@ def _format_response(responses: List[Dict[str, str]]):
 
     for response in responses["contents"]:
         try:
-            user_response_dict = {}
-            assistant_response_dict = {}
-            user_response_dict["content"] = response["instruction"]
-            user_response_dict["role"] = "user"
-            if isinstance(response["response"], list):
-                assistant_response_dict["content"] = ' '.join(response["response"])
-            else:
-                assistant_response_dict["content"] = response["response"]
-            assistant_response_dict["role"] = "assistant"
+            if not isinstance(response["response"], dict):
+                user_response_dict = {}
+                assistant_response_dict = {}
+                user_response_dict["content"] = response["instruction"]
+                user_response_dict["role"] = "user"
+                if isinstance(response["response"], list):
+                    assistant_response_dict["content"] = ' '.join(response["response"])
+                else:
+                    assistant_response_dict["content"] = response["response"]
+                assistant_response_dict["role"] = "assistant"
 
-            final_instruction_answer_pairs.append([user_response_dict, assistant_response_dict])
+                final_instruction_answer_pairs.append([user_response_dict, assistant_response_dict])
         except:
             pass
 
@@ -196,15 +197,27 @@ def collage_as_dataset(
     prompt_ids = [service_model_name] * len(all_formatted_responses)
     categories = [topic] * len(all_formatted_responses)
 
-    dataset_train = Dataset.from_dict(
-        {
+    try:
+        dataset_train = Dataset.from_dict(
+            {
+                "generator": generators,
+                "prompt_id": prompt_ids,
+                "seed_prompt": seed_prompts,
+                "messages": all_formatted_responses, 
+                "category": categories
+            }
+        )
+    except Exception as e:
+        print(e)
+        tmp = {
             "generator": generators,
             "prompt_id": prompt_ids,
             "seed_prompt": seed_prompts,
             "messages": all_formatted_responses, 
             "category": categories
         }
-    )
+        with open("error.json", "wt") as f:
+            json.dump(tmp, f, indent=4)
 
     return DatasetDict(
         {split: dataset_train}
