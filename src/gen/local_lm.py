@@ -35,7 +35,7 @@ def get_model(model_id, model_revision, model_args, data_args, sft_args):
 
     return tokenizer, model_id, model
 
-def gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs, delimiter="assistant\n"):
+def gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs, delimiter):
     """
     gen_model_output generates and return response(output) from a given model.
 
@@ -58,7 +58,8 @@ def gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs, delimi
     
     outputs = []
     raw_outputs = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-    for raw_output in raw_outputs:
-        outputs.append(raw_output.split(delimiter)[1])
+    for idx, raw_output in enumerate(raw_outputs):
+        output = raw_output.split(batch_data[idx]['prompt'])[1].split(delimiter)[1].strip()
+        outputs.append(output)
 
     return outputs

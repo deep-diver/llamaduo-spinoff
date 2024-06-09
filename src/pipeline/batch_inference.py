@@ -31,7 +31,7 @@ def gen_local_lm_responses(
     model_id, model_revision, 
     test_dataset_id, test_dataset_split, 
     data_preprocess_bs, inference_bs, repeat,
-    lm_response_dataset_split, config_path, ft_model_gen_configs
+    lm_response_dataset_split, config_path, ft_model_gen_configs, delimiter
 ):
     model_args, data_args, sft_args = get_args(config_path)
     tokenizer, model_id, model = get_model(
@@ -45,7 +45,7 @@ def gen_local_lm_responses(
     for idx in tqdm(range(0, len(ds), inference_bs), desc="batches"):
         for repeat_idx in tqdm(range(repeat), desc="repeat"):
             batch_data = ds[idx:idx+inference_bs]
-            lm_responses = gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs)
+            lm_responses = gen_model_outputs(model, tokenizer, batch_data, ft_model_gen_configs, delimiter=delimiter)
 
             for messages, lm_response in zip(batch_data["messages"], lm_responses):
                 instruction = messages[0]["content"]

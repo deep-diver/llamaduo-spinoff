@@ -25,7 +25,7 @@ def batch_inference(args):
         args.ft_model_id, args.ft_model_revision,
         args.test_ds_id, args.test_ds_split, 
         args.batch_infer_data_preprocess_bs, args.inference_bs, args.repeat,
-        args.lm_response_ds_split, args.ft_model_config_path, ft_model_gen_configs,
+        args.lm_response_ds_split, args.ft_model_config_path, ft_model_gen_configs, args.delimiter
     )
 
     if hf_hub is True:
@@ -59,6 +59,7 @@ if __name__ == "__main__":
                         default=os.path.abspath("config/sample_config.yaml"),
                         help="Path to the fine-tuned model configuration file.")
     parser.add_argument("--ft-model-gen-config-path", type=str, default="config/ft_gen_configs.yaml")
+    parser.add_argument("--delimiter", type=str, default="assistant")
     parser.add_argument("--test-ds-id", type=str, default=None,
                         help="ID of the test dataset.")
     parser.add_argument("--test-ds-split", type=str, default="test_sft",
